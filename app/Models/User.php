@@ -58,7 +58,7 @@ class User extends Authenticatable
     }
 
     /**
-      * Get the comments wrote by a user
+      * Get the comments written by a user
       */
     public function comments() {
         return $this->hasMany(Comment::class);
