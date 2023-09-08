@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Lesson;
 use App\Models\Comment;
 use App\Models\Achievement;
+use App\Models\Badge;
 
 class User extends Authenticatable
 {
@@ -71,5 +72,12 @@ class User extends Authenticatable
      */
     public function achievements() {
         return $this->belongsToMany(Achievement::class, 'achievement_user');
+    }
+
+    /**
+     * Get the user's badge
+     */
+    public function badge() {
+        return $this->belongsTo(Badge::class);
     }
 }
