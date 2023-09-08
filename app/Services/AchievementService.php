@@ -17,10 +17,9 @@ class AchievementService
     }
 
     /**
-     * Unlock a new achievement if a user meets the target of an achievement
+     * Check if a user will unlock a new achievement or not
      */
-    public function unlockAchievement($achievementsCount, $achievementGroup, $user)
-    {
+    public function checkAchievementUnlock($achievementsCount, $achievementGroup, $user) {
         /**
          * Get the achievement that has the target of the same number of achievements count and the same group
          * For example: if a user watched 5 lessons then check if there is an achievement that has a target of 5 and it is in the 'lesson' group
@@ -35,6 +34,15 @@ class AchievementService
             return;
         }
 
+        // Unlock the new achievement
+        $this->unlockAchievement($achievement, $user);
+    }
+
+    /**
+     * Unlock a new achievement
+     */
+    public function unlockAchievement(Achievement $achievement, User $user)
+    {
         // Attach the new achievement to the user's achievements
         $user->achievements()->syncWithoutDetaching($achievement->id);
 
