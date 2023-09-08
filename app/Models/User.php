@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Lesson;
 use App\Models\Comment;
+use App\Models\Achievement;
 
 class User extends Authenticatable
 {
@@ -62,5 +63,12 @@ class User extends Authenticatable
       */
     public function comments() {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get the user's achievements
+     */
+    public function achievements() {
+        return $this->belongsToMany(Achievement::class, 'achievement_user');
     }
 }
