@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Lesson;
+use App\Models\Comment;
 
 class User extends Authenticatable
 {
@@ -54,5 +55,12 @@ class User extends Authenticatable
       */
     public function watched() {
         return $this->belongsToMany(Lesson::class, 'lesson_user')->where('watched', 1);
+    }
+
+    /**
+      * Get the comments wrote by a user
+      */
+    public function comments() {
+        return $this->hasMany(Comment::class);
     }
 }
