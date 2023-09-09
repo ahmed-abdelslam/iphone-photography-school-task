@@ -61,6 +61,13 @@ class User extends Authenticatable
     }
 
     /**
+      * Get the lessons for a user
+      */
+    public function lessons() {
+        return $this->belongsToMany(Lesson::class, 'lesson_user')->withPivot('watched');
+    }
+
+    /**
       * Get the comments written by a user
       */
     public function comments() {
