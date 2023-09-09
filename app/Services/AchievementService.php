@@ -52,4 +52,31 @@ class AchievementService
         // Check if the user will unlock a new badge or not
         $this->badgeService->checkBadgeUnlock($user);
     }
+
+    //------------------------------------------------------------------------------------------
+    public function getNextAvailableAchievements($unlockedAchievements) {
+        /**
+         * Get the next available achievement for each group
+         * Instead of making multiple queries for each group
+         * We can iterate through the achievement groups to get the next available for each group
+         * This helps us in the future if we need later to add a new achievement group, instead of repeating the same query for the new group
+         */
+        $nextAvailableAchievements = [];
+        $achievementModel = new Achievement();
+        // Get all achievement groups
+        $achievementGroups = $achievementModel->getAchievementGroups();
+        foreach ($achievementGroups as $achievementGroup) {
+            // Get the next available achievement in a group that is not in unlocked achievements, and order it by target asc
+            $nextAvailableAchievement = Achievement::whereNotIn('name', $unlockedAchievements)
+                ->where('group', $achievementGroup)
+                ->orderBy('target', 'asc')
+                ->pluck('name')
+                ->first();
+            // If there is an available achievement then add it to nextAvailableAchievements array
+            if ($nextAvailableAchievement)
+                array_push($nextAvailableAchievements, $nextAvailableAchievement);
+        }
+
+        return $nextAvailableAchievements;
+    }
 }

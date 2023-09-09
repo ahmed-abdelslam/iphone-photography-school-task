@@ -6,35 +6,24 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Achievement;
 use App\Models\Badge;
+use App\Services\AchievementService;
 
 class AchievementsController extends Controller
 {
+    private $achievementService;
+
+    public function __construct(AchievementService $achievementService)
+    {
+        $this->achievementService = $achievementService;
+    }
+
     public function index(User $user)
     {
         // Get all the unlocked achievements
         $unlockedAchievements = $user->achievements()->pluck('name')->toArray();
 
-        /**
-         * Get the next available achievement for each group
-         * Instead of making multiple queries for each group
-         * We can iterate through the achievement groups to get the next available for each group
-         * This helps us in the future if we need later to add a new achievement group, instead of repeating the same query for the new group
-         */
-        $nextAvailableAchievements = [];
-        $achievementModel = new Achievement();
-        // Get all achievement groups
-        $achievementGroups = $achievementModel->getAchievementGroups();
-        foreach ($achievementGroups as $achievementGroup) {
-            // Get the next available achievement in a group that is not in unlocked achievements, and order it by target asc
-            $nextAvailableAchievement = Achievement::whereNotIn('name', $unlockedAchievements)
-                ->where('group', $achievementGroup)
-                ->orderBy('target', 'asc')
-                ->pluck('name')
-                ->first();
-            // If there is an available achievement then add it to nextAvailableAchievements array
-            if ($nextAvailableAchievement)
-                array_push($nextAvailableAchievements, $nextAvailableAchievement);
-        }
+        // Get the next available achievement for each group
+        $nextAvailableAchievements = $this->achievementService->getNextAvailableAchievements($unlockedAchievements);
 
         // Get the current user's badge
         $currentBadge = $user->badge;
