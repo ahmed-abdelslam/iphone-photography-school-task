@@ -34,11 +34,8 @@ class AchievementsController extends Controller
         // Get the next badge
         $nextBadge = $this->badgeService->getNextBadge($currentBadge);
 
-        $remainingToUnlockNextBadge = 0;
-        if ($nextBadge) {
-            // Subtract the target of the next badge from the target of current badge to know the remaining unlock the next
-            $remainingToUnlockNextBadge = $nextBadge->target - $currentBadge->target;
-        }
+        // Get the remaining to unlock next badge
+        $remainingToUnlockNextBadge = $this->badgeService->getRemainingToUnlockNextBadge($currentBadge, $nextBadge);
 
         return response()->json([
             'unlocked_achievements' => $unlockedAchievements,

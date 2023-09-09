@@ -53,4 +53,14 @@ class BadgeService
 
         return $nextBadge;
     }
+
+    public function getRemainingToUnlockNextBadge(?Badge $currentBadge, ?Badge $nextBadge) {
+        $remainingToUnlockNextBadge = 0;
+        if ($nextBadge) {
+            // Subtract the target of the next badge from the target of current badge to know the remaining unlock the next
+            $remainingToUnlockNextBadge = $nextBadge->target - ($currentBadge->target ?? 0);
+        }
+
+        return $remainingToUnlockNextBadge;
+    }
 }
