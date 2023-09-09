@@ -23,8 +23,11 @@ class CommentWrittenListener
      */
     public function handle(object $event): void
     {
-        // Get the user model
-        $user = $event->user;
+        // Get the comment model
+        $comment = $event->comment;
+
+        // Get the comment's user
+        $user = $comment->user;
 
         // Get the number of user's comments
         $commentsCount = $user->comments()->count();
