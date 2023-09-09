@@ -5,17 +5,20 @@ namespace App\Listeners;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Services\AchievementService;
+use App\Services\LessonService;
 
 class LessonWatchedListener
 {
     private $achievementService;
+    private $lessonService;
 
     /**
      * Create the event listener.
      */
-    public function __construct(AchievementService $achievementService)
+    public function __construct(AchievementService $achievementService, LessonService $lessonService)
     {
         $this->achievementService = $achievementService;
+        $this->lessonService = $lessonService;
     }
 
     /**
@@ -25,6 +28,12 @@ class LessonWatchedListener
     {
         // Get the user model
         $user = $event->user;
+
+        // Get the lesson model
+        $lesson = $event->lesson;
+
+        // Save the lesson as watched by the user
+        $this->lessonService->addNewLessonAsWatchedByUser($user, $lesson);
 
         // Get the number of watched lessons
         $lessonsCount = $user->watched()->count();
