@@ -41,4 +41,16 @@ class BadgeService
         // Fire BadgeUnlocked event
         event(new BadgeUnlocked($badge->name, $user));
     }
+
+    //--------------------------------------------------------------------------------------
+    public function getNextBadge(?Badge $currentBadge) {
+        $nextBadge = null;
+
+        // The next badge should be greater than the current badge's target, and order it by target asc
+        $nextBadge = Badge::where('target', '>', $currentBadge->target ?? 0)
+                            ->orderBy('target', 'asc')
+                            ->first();
+
+        return $nextBadge;
+    }
 }

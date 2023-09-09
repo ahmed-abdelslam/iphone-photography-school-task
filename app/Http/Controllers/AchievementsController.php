@@ -7,14 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\Achievement;
 use App\Models\Badge;
 use App\Services\AchievementService;
+use App\Services\BadgeService;
 
 class AchievementsController extends Controller
 {
     private $achievementService;
+    private $badgeService;
 
-    public function __construct(AchievementService $achievementService)
+    public function __construct(AchievementService $achievementService, BadgeService $badgeService)
     {
         $this->achievementService = $achievementService;
+        $this->badgeService = $badgeService;
     }
 
     public function index(User $user)
@@ -27,13 +30,9 @@ class AchievementsController extends Controller
 
         // Get the current user's badge
         $currentBadge = $user->badge;
-        $nextBadge = null;
-        if ($currentBadge) {
-            // The next badge should be greater than the current badge's target, and order it by target asc
-            $nextBadge = Badge::where('target', '>', $currentBadge->target)
-                ->orderBy('target', 'asc')
-                ->first();
-        }
+
+        // Get the next badge
+        $nextBadge = $this->badgeService->getNextBadge($currentBadge);
 
         $remainingToUnlockNextBadge = 0;
         if ($nextBadge) {
