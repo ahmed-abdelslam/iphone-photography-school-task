@@ -31,7 +31,7 @@ class Achievement extends Model
     ];
 
     // Get achievement groups method
-    public static function getAchievementGroups() {
-        return $achievementGroups;
+    public function getAchievementGroups() {
+        return $this->achievementGroups;
     }
 }
