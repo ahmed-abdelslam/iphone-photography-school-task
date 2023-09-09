@@ -17,7 +17,7 @@ class BadgeService
         $achievementsCount = $user->achievements()->count();
 
         // Get the badge that has the target of the same number of achievements
-        $badge = Badge::where('target', $achievementCount)->first();
+        $badge = Badge::where('target', $achievementsCount)->first();
 
         // If there is no matching badge, then return and do nothing
         if (!$badge) {
